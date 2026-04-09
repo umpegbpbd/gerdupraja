@@ -6,7 +6,7 @@
     <title>Form Laporan Gerdu Praja</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; color: #333; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 1300px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; margin-bottom: 5px; color: #2c3e50; }
         h4 { text-align: center; margin-top: 0; margin-bottom: 25px; color: #7f8c8d; font-weight: normal; }
         .sync-status { text-align: center; font-size: 13px; font-weight: bold; margin-bottom: 20px; padding: 8px; border-radius: 4px; background: #eee; }
@@ -44,6 +44,10 @@
         table, th, td { border: 1px solid #bbb; }
         th, td { padding: 8px; text-align: left; vertical-align: middle; }
         th { background-color: #e2e6ea; font-weight: bold; text-align: center; }
+        
+        /* Utility class agar tulisan tidak turun ke bawah */
+        .nowrap { white-space: nowrap; }
+
         .img-preview { width: 50px; height: auto; object-fit: contain; display: block; margin: 0 auto; cursor: pointer;}
         
         .action-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
@@ -151,15 +155,17 @@
                 <tr>
                     <th style="width: 3%;">No</th>
                     <th style="width: 12%;">Nama PNS/CPNS</th>
-                    <th style="width: 10%;">NIP</th>
-                    <th style="width: 10%;">Jabatan & Unit</th>
-                    <th style="width: 12%;">Nama Pekerja</th>
+                    <th style="width: 12%;">NIP</th>
+                    <th style="width: 10%;">Jabatan</th>
+                    <th style="width: 10%;">Unit Kerja</th>
+                    <th style="width: 10%;">Nama Pekerja</th>
                     <th style="width: 10%;">NIK Pekerja</th>
-                    <th style="width: 10%;">Pekerjaan</th>
-                    <th style="width: 15%;">Alamat</th>
-                    <th style="width: 8%;">No. WA</th>
-                    <th style="width: 5%;">KK</th>
-                    <th style="width: 5%;">Aksi</th>
+                    <th style="width: 8%;">Pekerjaan</th>
+                    <th style="width: 10%;">Alamat</th>
+                    <th style="width: 5%;">No. WA PNS</th>
+                    <th style="width: 5%;">No. WA PKJ</th>
+                    <th style="width: 3%;">KK</th>
+                    <th style="width: 2%;">Aksi</th>
                 </tr>
             </thead>
             <tbody id="tbodyData"></tbody>
@@ -234,7 +240,6 @@
     // ========================================================
     // KONFIGURASI GITHUB - WAJIB DIISI!
     // ========================================================
-    // HARAP GANTI TOKEN DI BAWAH INI KARENA TOKEN LAMA ANDA SUDAH DIBLOKIR GITHUB
     const GITHUB_TOKEN = "ghp_" + "r91EOvwNfQ2Ps3CqTAdEDAYF6be0Ee0gXgi0"; 
     const GITHUB_USERNAME = "umpegbpbd";               
     const GITHUB_REPO = "gerdupraja";                   
@@ -317,7 +322,7 @@
             } else if (response.status === 404) {
                 dataLaporan = []; base64TtdLokal = null;
                 perbaruiUiTtd();
-                statusEl.innerText = "✅ Tersambung";
+                statusEl.innerText = "✅ Tersambung! Database baru siap digunakan.";
                 statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
             } else {
                 throw new Error("Gagal load dari GitHub");
@@ -477,7 +482,7 @@
         tbody.innerHTML = '';
         
         if (dataLaporan.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:gray; padding:20px;">Belum ada data pelaporan.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:gray; padding:20px;">Belum ada data pelaporan.</td></tr>';
             return;
         }
 
@@ -485,18 +490,21 @@
             const imgKk = row.kk ? `<img src="${row.kk}" class="img-preview" onclick="window.open('${row.kk}', '_blank')">` : '-';
 
             const tr = document.createElement('tr');
+            // Menambahkan class "nowrap" untuk kolom yang isinya angka panjang agar menyamping
             tr.innerHTML = `
                 <td style="text-align:center;">${index + 1}</td>
                 <td><b>${row.pns}</b></td>
-                <td>${row.nip}</td>
-                <td>${row.jab}<br><small style="color:#666">${row.unit}</small></td>
+                <td class="nowrap">${row.nip}</td>
+                <td>${row.jab}</td>
+                <td>${row.unit}</td>
                 <td><b>${row.pkj}</b></td>
-                <td>${row.nik}</td>
+                <td class="nowrap">${row.nik}</td>
                 <td>${row.kerja}</td>
                 <td style="font-size:11px;">${row.alamat}</td>
-                <td style="font-size:11px;">PNS: ${row.wapns || '-'}<br>PKJ: ${row.wapkj || '-'}</td>
+                <td class="nowrap" style="font-size:11px;">${row.wapns || '-'}</td>
+                <td class="nowrap" style="font-size:11px;">${row.wapkj || '-'}</td>
                 <td style="text-align:center;">${imgKk}</td>
-                <td style="text-align:center;"><button class="danger" style="padding:4px 8px; font-size:11px;" onclick="hapusBaris(${row.id})">Hapus</button></td>
+                <td style="text-align:center;"><button class="danger" style="padding:4px 8px; font-size:11px;" onclick="hapusBaris(${row.id})">X</button></td>
             `;
             tbody.appendChild(tr);
         });
@@ -517,23 +525,30 @@
         
         const tableBody = dataLaporan.map((row, index) => [ 
             index + 1, 
-            row.pns, row.nip, `${row.jab}\n${row.unit}`, 
+            row.pns, row.nip, row.jab, row.unit, 
             row.pkj, row.nik, row.kerja, row.alamat, 
             row.wapns, row.wapkj
         ]);
 
         doc.autoTable({
             startY: 30,
-            head: [['No', 'Nama PNS/CPNS', 'NIP', 'Jabatan &\nUnit Kerja', 'Nama Pekerja Rentan\nyang Didaftarkan', 'NIK yang\nDidaftarkan', 'Pekerjaan yang\nDidaftarkan', 'Alamat yang\nDidaftarkan', 'No. WA\nPNS/CPNS', 'No. WA yang\nDidaftarkan']],
+            head: [['No', 'Nama PNS/CPNS', 'NIP', 'Jabatan', 'Unit Kerja', 'Nama Pekerja Rentan\nyang Didaftarkan', 'NIK yang\nDidaftarkan', 'Pekerjaan yang\nDidaftarkan', 'Alamat yang\nDidaftarkan', 'No. WA\nPNS/CPNS', 'No. WA yang\nDidaftarkan']],
             body: tableBody, 
             theme: 'grid', 
             styles: { fontSize: 8, valign: 'middle', textColor: [0, 0, 0], lineColor: [0, 0, 0], lineWidth: 0.2 },
             headStyles: { fillColor: [220, 224, 228], textColor: [0, 0, 0], halign: 'center', fontStyle: 'bold' },
             columnStyles: {
-                0: { cellWidth: 8, halign: 'center' },
-                1: { cellWidth: 35 }, 2: { cellWidth: 30 }, 3: { cellWidth: 35 },
-                4: { cellWidth: 35 }, 5: { cellWidth: 30 }, 6: { cellWidth: 25 },
-                7: { cellWidth: 40 }, 8: { cellWidth: 20 }, 9: { cellWidth: 20 }
+                0: { cellWidth: 7, halign: 'center' },
+                1: { cellWidth: 28 }, 
+                2: { cellWidth: 32 }, // Lebar NIP dilebarkan 
+                3: { cellWidth: 25 }, 
+                4: { cellWidth: 20 },
+                5: { cellWidth: 30 }, 
+                6: { cellWidth: 28 }, // Lebar NIK dilebarkan
+                7: { cellWidth: 20 },
+                8: { cellWidth: 35 }, 
+                9: { cellWidth: 25 }, // Lebar WA PNS dilebarkan
+                10: { cellWidth: 25 } // Lebar WA PKJ dilebarkan
             }
         });
 
@@ -562,8 +577,8 @@
         const ws = wb.addWorksheet(`Laporan Gerdu Praja`);
 
         ws.columns = [
-            { width: 5 }, { width: 25 }, { width: 20 }, { width: 25 }, { width: 25 }, 
-            { width: 25 }, { width: 20 }, { width: 20 }, { width: 40 }, { width: 15 }, { width: 15 }
+            { width: 5 }, { width: 25 }, { width: 25 }, { width: 25 }, { width: 20 }, 
+            { width: 25 }, { width: 20 }, { width: 20 }, { width: 40 }, { width: 18 }, { width: 18 }
         ];
 
         ws.mergeCells('A1:K1');
@@ -595,6 +610,7 @@
                 const cell = ws.getCell(`${col}${currentRow}`);
                 cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
                 cell.alignment = { vertical: 'middle', wrapText: true };
+                // Memastikan kolom angka berada di tengah dan teks menyamping
                 if(['A','C','G','J','K'].includes(col)) { cell.alignment.horizontal = 'center'; }
             });
             currentRow++;
