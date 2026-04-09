@@ -317,7 +317,7 @@
                 base64TtdLokal = parsedData.ttd || null;
 
                 perbaruiUiTtd();
-                statusEl.innerText = "✅ Tersambung & Data Sinkron";
+                statusEl.innerText = "✅ Tersambung";
                 statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
             } else if (response.status === 404) {
                 dataLaporan = []; base64TtdLokal = null;
@@ -519,7 +519,7 @@
         const instansi = document.getElementById('inputKopInstansi').value || "Badan Penanggulangan Bencana Daerah";
 
         doc.setFontSize(12); doc.setFont("helvetica", "bold");
-        doc.text("FORMAT LAPORAN PELAKSANAAN GERAKAN PEDULI PERLINDUNGAN PEKERJA RENTAN (GERDU PRAJA) TAHUN 2026", pageWidth / 2, 15, { align: 'center' });
+        doc.text("LAPORAN PELAKSANAAN GERAKAN PEDULI PERLINDUNGAN PEKERJA RENTAN (GERDU PRAJA) TAHUN 2026", pageWidth / 2, 15, { align: 'center' });
         doc.setFontSize(11);
         doc.text(instansi.toUpperCase(), pageWidth / 2, 22, { align: 'center' });
         
