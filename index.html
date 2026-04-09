@@ -119,7 +119,7 @@
         </div>
         
         <div class="form-group full-width" style="margin-top: 10px;">
-            <button id="btnSimpan" class="primary" onclick="tambahData()">TAMBAHKAN KE LAPORAN</button>
+            <button id="btnSimpan" class="primary" onclick="tambahData()">SIMPAN</button>
         </div>
     </div>
 
@@ -317,7 +317,7 @@
             } else if (response.status === 404) {
                 dataLaporan = []; base64TtdLokal = null;
                 perbaruiUiTtd();
-                statusEl.innerText = "✅ Tersambung! Database baru siap digunakan.";
+                statusEl.innerText = "✅ Tersambung";
                 statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
             } else {
                 throw new Error("Gagal load dari GitHub");
