@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Laporan Gerdu Praja</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; margin-bottom: 5px; color: #2c3e50; }
+        h4 { text-align: center; margin-top: 0; margin-bottom: 25px; color: #7f8c8d; font-weight: normal; }
+        .sync-status { text-align: center; font-size: 13px; font-weight: bold; margin-bottom: 20px; padding: 8px; border-radius: 4px; background: #eee; }
+        
+        .section-title { margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #3498db; color: #2980b9; font-size: 16px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 5px; }
+        .form-group.full-width { grid-column: span 3; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; }
+        input[type="text"], input[type="date"], select, input[type="file"] { width: 100%; padding: 9px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;}
+        
+        button { padding: 8px 15px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        button.primary { background-color: #007BFF; color: white; width: 100%; padding: 12px; font-size: 15px;}
+        button.primary:hover { background-color: #0056b3; }
+        button.danger { background-color: #dc3545; color: white; margin-right: 5px;}
+        button.success { background-color: #28a745; color: white; }
+        button.warning { background-color: #f39c12; color: white; font-size: 13px;}
+        button.info { background-color: #17a2b8; color: white; }
+        button.secondary { background-color: #6c757d; color: white; margin-bottom: 15px; }
+        
+        .filter-section { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; margin-top: 10px; margin-bottom: 15px; padding: 15px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; gap: 15px;}
+        .filter-item { flex: 1; min-width: 250px; }
+        
+        .ttd-status { font-size: 13px; color: green; font-weight: bold; margin-bottom: 5px; display: none; }
+
+        .table-container { overflow-x: auto; display: none; /* Sembunyikan default */ }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
+        table, th, td { border: 1px solid #bbb; }
+        th, td { padding: 8px; text-align: left; vertical-align: middle; }
+        th { background-color: #e2e6ea; font-weight: bold; text-align: center; }
+        .img-preview { width: 50px; height: auto; object-fit: contain; display: block; margin: 0 auto; cursor: pointer;}
+        
+        .action-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Laporan Pelaksanaan Gerdu Praja 2026</h2>
+    <h4>Gerakan Peduli Perlindungan Pekerja Rentan Pemerintah Kabupaten Trenggalek</h4>
+    
+    <div id="syncStatus" class="sync-status">Mempersiapkan koneksi ke GitHub...</div>
+    
+    <div class="section-title">Data Pegawai Negeri Sipil (PNS/CPNS)</div>
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Nama PNS/CPNS</label>
+            <input type="text" id="inputNamaPns" placeholder="Masukkan Nama Lengkap & Gelar">
+        </div>
+        <div class="form-group">
+            <label>NIP</label>
+            <input type="text" id="inputNip" placeholder="Masukkan 18 Digit NIP">
+        </div>
+        <div class="form-group">
+            <label>Jabatan</label>
+            <input type="text" id="inputJabatan" placeholder="Contoh: Analis Kebijakan">
+        </div>
+        <div class="form-group">
+            <label>Unit Kerja</label>
+            <input type="text" id="inputUnitKerja" value="BPBD Kabupaten Trenggalek">
+        </div>
+        <div class="form-group">
+            <label>No. WA PNS/CPNS</label>
+            <input type="text" id="inputWaPns" placeholder="081234567890">
+        </div>
+    </div>
+
+    <div class="section-title">Data Pekerja Rentan yang Didaftarkan</div>
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Nama Pekerja Rentan</label>
+            <input type="text" id="inputNamaPekerja" placeholder="Nama sesuai KTP/KK">
+        </div>
+        <div class="form-group">
+            <label>NIK Pekerja Rentan</label>
+            <input type="text" id="inputNikPekerja" placeholder="16 Digit NIK">
+        </div>
+        <div class="form-group">
+            <label>Pekerjaan</label>
+            <input type="text" id="inputPekerjaan" placeholder="Contoh: Petani / Penjahit">
+        </div>
+        <div class="form-group">
+            <label>Alamat Lengkap</label>
+            <input type="text" id="inputAlamat" placeholder="RT/RW, Desa, Kecamatan">
+        </div>
+        <div class="form-group">
+            <label>No. WA Pekerja (Opsional)</label>
+            <input type="text" id="inputWaPekerja" placeholder="08xxxx (Kosongi jika tidak ada)">
+        </div>
+        <div class="form-group">
+            <label>Unggah KK (Bukti)</label>
+            <input type="file" id="inputKk" accept="image/png, image/jpeg">
+        </div>
+        
+        <div class="form-group full-width" style="margin-top: 10px;">
+            <button id="btnSimpan" class="primary" onclick="tambahData()">TAMBAHKAN KE LAPORAN</button>
+        </div>
+    </div>
+
+    <hr style="margin: 30px 0; border: 1px solid #ddd;">
+
+    <div class="action-buttons">
+        <button id="btnToggleLaporan" class="secondary" onclick="toggleLaporan()">👁️ Tampilkan Laporan Data</button>
+    </div>
+
+    <div id="areaLaporan" class="table-container">
+        <div class="filter-section">
+            <div class="filter-item">
+                <label>Instansi Pelapor (Kop Surat):</label>
+                <input type="text" id="inputKopInstansi" value="Dinas/Badan/Kecamatan/RS/Puskesmas/Sekolah">
+            </div>
+            <div class="filter-item">
+                <label>Nama Pimpinan (Penandatangan):</label>
+                <input type="text" id="inputNamaPimpinan" placeholder="Nama Kepala Dinas / Pimpinan">
+            </div>
+            <div class="filter-item">
+                <label>Pengaturan Tanda Tangan Pimpinan:</label>
+                <div id="ttdStatus" class="ttd-status">✅ Tanda Tangan Tersimpan</div>
+                <input type="file" id="inputTtd" accept="image/png, image/jpeg" onchange="simpanTtdLokal(this)">
+                <button id="btnResetTtd" class="warning" style="display:none; margin-top:5px;" onclick="hapusTtdLokal()">Ganti TTD</button>
+            </div>
+        </div>
+
+        <table id="tabelLaporan">
+            <thead>
+                <tr>
+                    <th style="width: 3%;">No</th>
+                    <th style="width: 12%;">Nama PNS/CPNS</th>
+                    <th style="width: 10%;">NIP</th>
+                    <th style="width: 10%;">Jabatan & Unit</th>
+                    <th style="width: 12%;">Nama Pekerja</th>
+                    <th style="width: 10%;">NIK Pekerja</th>
+                    <th style="width: 10%;">Pekerjaan</th>
+                    <th style="width: 15%;">Alamat</th>
+                    <th style="width: 8%;">No. WA</th>
+                    <th style="width: 5%;">KK</th>
+                    <th style="width: 5%;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyData"></tbody>
+        </table>
+
+        <div class="action-buttons" style="justify-content: flex-end;">
+            <div>
+                <button class="danger" onclick="cetakPDF()">📄 Cetak PDF Laporan</button>
+                <button class="success" onclick="cetakExcel()">📊 Cetak Excel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========================================================
+    // KONFIGURASI GITHUB - WAJIB DIISI!
+    // ========================================================
+    const GITHUB_TOKEN = "ghp_" + "xJaWCzTZ9UoU9thNTZGWnukpErWKME0XiQ87"; 
+    const GITHUB_USERNAME = "umpegbpbd";               
+    const GITHUB_REPO = "gerdupraja";                   
+    const GITHUB_FILE = "laporan_gerdupraja_2026.json";                 
+
+    let dataLaporan = []; 
+    let fileSha = ""; 
+    let isModeOffline = false; 
+    let base64TtdLokal = null; 
+    
+    // Toggle visibilitas tabel laporan
+    function toggleLaporan() {
+        const divLaporan = document.getElementById('areaLaporan');
+        const btn = document.getElementById('btnToggleLaporan');
+        if (divLaporan.style.display === 'none' || divLaporan.style.display === '') {
+            divLaporan.style.display = 'block';
+            btn.innerHTML = '🙈 Sembunyikan Laporan Data';
+            btn.classList.replace('secondary', 'warning');
+        } else {
+            divLaporan.style.display = 'none';
+            btn.innerHTML = '👁️ Tampilkan Laporan Data';
+            btn.classList.replace('warning', 'secondary');
+        }
+    }
+
+    // FUNGSI UPDATE UI TANDA TANGAN
+    function perbaruiUiTtd() {
+        if(base64TtdLokal) {
+            document.getElementById('ttdStatus').style.display = 'block';
+            document.getElementById('inputTtd').style.display = 'none';
+            document.getElementById('btnResetTtd').style.display = 'inline-block';
+        } else {
+            document.getElementById('ttdStatus').style.display = 'none';
+            document.getElementById('inputTtd').style.display = 'block';
+            document.getElementById('inputTtd').value = '';
+            document.getElementById('btnResetTtd').style.display = 'none';
+        }
+    }
+
+    // ========================================================
+    // KONEKSI API KE GITHUB (MEMBACA & MENYIMPAN)
+    // ========================================================
+    async function muatDataAwal() {
+        const statusEl = document.getElementById('syncStatus');
+        
+        if (GITHUB_TOKEN.includes("MASUKKAN_TOKEN") || GITHUB_TOKEN.trim() === "") {
+            isModeOffline = true;
+            let offlineData = JSON.parse(localStorage.getItem('dataGerduPrajaOffline'));
+            if(offlineData) {
+                dataLaporan = offlineData.laporan || []; 
+                base64TtdLokal = offlineData.ttd || null;
+            }
+            perbaruiUiTtd();
+            statusEl.innerHTML = "⚠️ <b>Mode Offline Aktif</b> (Token GitHub belum diatur). Data disimpan di browser lokal.";
+            statusEl.style.color = "#856404"; statusEl.style.backgroundColor = "#fff3cd";
+            renderTabel();
+            return;
+        }
+
+        statusEl.innerText = "⏳ Sedang sinkronisasi data dengan GitHub...";
+        statusEl.style.color = "#004085"; statusEl.style.backgroundColor = "#cce5ff";
+
+        try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                fileSha = result.sha;
+                const decodedContent = decodeURIComponent(escape(atob(result.content)));
+                const parsedData = JSON.parse(decodedContent);
+                
+                dataLaporan = parsedData.laporan || [];
+                base64TtdLokal = parsedData.ttd || null;
+
+                perbaruiUiTtd();
+                statusEl.innerText = "✅ Tersambung & Data Sinkron";
+                statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
+            } else if (response.status === 404) {
+                dataLaporan = []; base64TtdLokal = null;
+                perbaruiUiTtd();
+                statusEl.innerText = "✅ Tersambung! Database awal siap digunakan.";
+                statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
+            } else {
+                throw new Error("Gagal load dari GitHub");
+            }
+        } catch (error) {
+            console.error(error);
+            isModeOffline = true;
+            let offlineData = JSON.parse(localStorage.getItem('dataGerduPrajaOffline'));
+            if(offlineData) {
+                dataLaporan = offlineData.laporan || []; 
+                base64TtdLokal = offlineData.ttd || null;
+            }
+            perbaruiUiTtd();
+            statusEl.innerHTML = "❌ <b>Koneksi GitHub Gagal</b>. Beralih ke Penyimpanan Lokal.";
+            statusEl.style.color = "#721c24"; statusEl.style.backgroundColor = "#f8d7da";
+        }
+        renderTabel();
+    }
+
+    async function simpanDataSistem() {
+        const statusEl = document.getElementById('syncStatus');
+        const btn = document.getElementById('btnSimpan');
+        
+        const payloadData = { laporan: dataLaporan, ttd: base64TtdLokal };
+
+        if(isModeOffline) {
+            localStorage.setItem('dataGerduPrajaOffline', JSON.stringify(payloadData));
+            statusEl.innerHTML = "✅ <b>Data Tersimpan Lokal</b>.";
+            return;
+        }
+
+        statusEl.innerText = "⏳ Menyimpan ke Database...";
+        if(btn) btn.disabled = true;
+
+        const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(payloadData))));
+
+        try {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: "Update Laporan Gerdu Praja",
+                    content: contentBase64,
+                    sha: fileSha ? fileSha : undefined
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                fileSha = result.content.sha;
+                statusEl.innerText = "✅ Data Berhasil Disimpan ke Cloud";
+            } else {
+                throw new Error("Upload gagal");
+            }
+        } catch (error) {
+            statusEl.innerText = "❌ Gagal menyimpan ke server!";
+        }
+        if(btn) btn.disabled = false;
+    }
+
+    window.onload = function() {
+        muatDataAwal(); 
+    };
+
+    function compressImage(file) {
+        return new Promise((resolve) => {
+            if (!file) return resolve(null);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 600; let scaleSize = 1;
+                    if(img.width > MAX_WIDTH) { scaleSize = MAX_WIDTH / img.width; }
+                    canvas.width = img.width * scaleSize;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                }
+            };
+        });
+    }
+
+    async function simpanTtdLokal(input) {
+        if (input.files && input.files[0]) {
+            base64TtdLokal = await compressImage(input.files[0]); 
+            perbaruiUiTtd();
+            await simpanDataSistem();
+        }
+    }
+
+    async function hapusTtdLokal() {
+        if(confirm("Yakin ingin menghapus tanda tangan pimpinan?")) {
+            base64TtdLokal = null;
+            perbaruiUiTtd();
+            await simpanDataSistem();
+        }
+    }
+
+    async function tambahData() {
+        const pns = document.getElementById('inputNamaPns').value;
+        const nip = document.getElementById('inputNip').value;
+        const jab = document.getElementById('inputJabatan').value;
+        const unit = document.getElementById('inputUnitKerja').value;
+        const pkj = document.getElementById('inputNamaPekerja').value;
+        const nik = document.getElementById('inputNikPekerja').value;
+        const kerja = document.getElementById('inputPekerjaan').value;
+        const alamat = document.getElementById('inputAlamat').value;
+        const wapns = document.getElementById('inputWaPns').value;
+        const wapkj = document.getElementById('inputWaPekerja').value;
+        const fileKk = document.getElementById('inputKk').files[0];
+
+        if(!pns || !nip || !pkj || !nik) { 
+            alert("Nama PNS, NIP, Nama Pekerja Rentan, dan NIK wajib diisi!"); 
+            return; 
+        }
+
+        const base64Kk = await compressImage(fileKk);
+
+        dataLaporan.push({
+            id: Date.now(),
+            pns: pns, nip: nip, jab: jab, unit: unit,
+            pkj: pkj, nik: nik, kerja: kerja, alamat: alamat,
+            wapns: wapns, wapkj: wapkj, kk: base64Kk
+        });
+
+        // Reset sebagian form (kecuali unit kerja agar gampang input banyak)
+        document.getElementById('inputNamaPns').value = '';
+        document.getElementById('inputNip').value = '';
+        document.getElementById('inputJabatan').value = '';
+        document.getElementById('inputNamaPekerja').value = '';
+        document.getElementById('inputNikPekerja').value = '';
+        document.getElementById('inputPekerjaan').value = '';
+        document.getElementById('inputAlamat').value = '';
+        document.getElementById('inputWaPns').value = '';
+        document.getElementById('inputWaPekerja').value = '';
+        document.getElementById('inputKk').value = '';
+
+        renderTabel();
+        await simpanDataSistem();
+        alert("Data berhasil ditambahkan!");
+    }
+
+    async function hapusBaris(id) {
+        if(confirm("Apakah Anda yakin ingin menghapus data laporan ini?")) {
+            dataLaporan = dataLaporan.filter(row => row.id !== id);
+            renderTabel();
+            await simpanDataSistem();
+        }
+    }
+
+    function renderTabel() {
+        const tbody = document.getElementById('tbodyData');
+        tbody.innerHTML = '';
+        
+        if (dataLaporan.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:gray; padding:20px;">Belum ada data pelaporan.</td></tr>';
+            return;
+        }
+
+        dataLaporan.forEach((row, index) => {
+            const imgKk = row.kk ? `<img src="${row.kk}" class="img-preview" onclick="window.open('${row.kk}', '_blank')">` : '-';
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="text-align:center;">${index + 1}</td>
+                <td><b>${row.pns}</b></td>
+                <td>${row.nip}</td>
+                <td>${row.jab}<br><small style="color:#666">${row.unit}</small></td>
+                <td><b>${row.pkj}</b></td>
+                <td>${row.nik}</td>
+                <td>${row.kerja}</td>
+                <td style="font-size:11px;">${row.alamat}</td>
+                <td style="font-size:11px;">PNS: ${row.wapns || '-'}<br>PKJ: ${row.wapkj || '-'}</td>
+                <td style="text-align:center;">${imgKk}</td>
+                <td style="text-align:center;"><button class="danger" style="padding:4px 8px; font-size:11px;" onclick="hapusBaris(${row.id})">Hapus</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // ========================================================
+    // CETAK PDF & EXCEL 
+    // ========================================================
+    function cetakPDF() {
+        if(dataLaporan.length === 0) { alert("Tidak ada data untuk dicetak!"); return; }
+
+        const { jsPDF } = window.jspdf;
+        // Mode Landscape karena banyak kolom
+        const doc = new jsPDF('l', 'mm', 'a4'); 
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const instansi = document.getElementById('inputKopInstansi').value || "Dinas/Badan/Kecamatan/RS/Puskesmas/Sekolah";
+
+        doc.setFontSize(12); doc.setFont("helvetica", "bold");
+        doc.text("FORMAT LAPORAN PELAKSANAAN GERAKAN PEDULI PERLINDUNGAN PEKERJA RENTAN (GERDU PRAJA) TAHUN 2026", pageWidth / 2, 15, { align: 'center' });
+        doc.setFontSize(11);
+        doc.text(instansi.toUpperCase(), pageWidth / 2, 22, { align: 'center' });
+        
+        const tableBody = dataLaporan.map((row, index) => [ 
+            index + 1, 
+            row.pns, row.nip, `${row.jab}\n${row.unit}`, 
+            row.pkj, row.nik, row.kerja, row.alamat, 
+            row.wapns, row.wapkj
+        ]);
+
+        doc.autoTable({
+            startY: 30,
+            head: [['No', 'Nama PNS/CPNS', 'NIP', 'Jabatan &\nUnit Kerja', 'Nama Pekerja Rentan\nyang Didaftarkan', 'NIK yang\nDidaftarkan', 'Pekerjaan yang\nDidaftarkan', 'Alamat yang\nDidaftarkan', 'No. WA\nPNS/CPNS', 'No. WA yang\nDidaftarkan']],
+            body: tableBody, 
+            theme: 'grid', 
+            styles: { fontSize: 8, valign: 'middle', textColor: [0, 0, 0], lineColor: [0, 0, 0], lineWidth: 0.2 },
+            headStyles: { fillColor: [220, 224, 228], textColor: [0, 0, 0], halign: 'center', fontStyle: 'bold' },
+            columnStyles: {
+                0: { cellWidth: 8, halign: 'center' },
+                1: { cellWidth: 35 }, 2: { cellWidth: 30 }, 3: { cellWidth: 35 },
+                4: { cellWidth: 35 }, 5: { cellWidth: 30 }, 6: { cellWidth: 25 },
+                7: { cellWidth: 40 }, 8: { cellWidth: 20 }, 9: { cellWidth: 20 }
+            }
+        });
+
+        // Tanda Tangan Footer
+        let finalY = doc.lastAutoTable.finalY + 15;
+        if (finalY > 180) { doc.addPage(); finalY = 30; }
+        const rightMargin = pageWidth - 60; 
+        
+        // Memakai lokasi default Trenggalek
+        doc.setFont("helvetica", "normal");
+        const today = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' });
+        doc.text(`Trenggalek, ${today}`, rightMargin, finalY);
+        doc.text("Kepala Instansi", rightMargin, finalY + 5);
+        
+        if (base64TtdLokal) { doc.addImage(base64TtdLokal, 'JPEG', rightMargin, finalY + 8, 30, 15); }
+        
+        const namaPimpinan = document.getElementById('inputNamaPimpinan').value || "(...................................)";
+        doc.setFont("helvetica", "bold"); 
+        doc.text(namaPimpinan, rightMargin, finalY + 30);
+
+        doc.save(`Laporan_GerduPraja_2026.pdf`);
+    }
+
+    async function cetakExcel() {
+        if(dataLaporan.length === 0) { alert("Tidak ada data untuk dicetak!"); return; }
+
+        const wb = new ExcelJS.Workbook();
+        const ws = wb.addWorksheet(`Laporan Gerdu Praja`);
+
+        ws.columns = [
+            { width: 5 }, { width: 25 }, { width: 20 }, { width: 25 }, { width: 25 }, 
+            { width: 25 }, { width: 20 }, { width: 20 }, { width: 40 }, { width: 15 }, { width: 15 }
+        ];
+
+        ws.mergeCells('A1:K1');
+        ws.getCell('A1').value = "FORMAT LAPORAN PELAKSANAAN GERAKAN PEDULI PERLINDUNGAN PEKERJA RENTAN (GERDU PRAJA) TAHUN 2026";
+        ws.getCell('A1').font = { bold: true, size: 12 }; ws.getCell('A1').alignment = { horizontal: 'center' };
+        
+        const instansi = document.getElementById('inputKopInstansi').value || "Dinas/Badan/Kecamatan/RS/Puskesmas/Sekolah";
+        ws.mergeCells('A2:K2');
+        ws.getCell('A2').value = instansi.toUpperCase();
+        ws.getCell('A2').font = { bold: true, size: 11 }; ws.getCell('A2').alignment = { horizontal: 'center' };
+
+        const startRow = 4;
+        const headerTabel = ws.getRow(startRow);
+        headerTabel.values = ['No', 'Nama PNS/CPNS', 'NIP', 'Jabatan', 'Unit Kerja', 'Nama Pekerja Rentan yang Didaftarkan/Dibiayai', 'NIK yang Didaftarkan', 'Pekerjaan yang Didaftarkan', 'Alamat yang Didaftarkan', 'No. WA PNS/CPNS', 'No. WA yang Didaftarkan'];
+        
+        ['A','B','C','D','E','F','G','H','I','J','K'].forEach((col) => {
+            const cell = ws.getCell(`${col}${startRow}`);
+            cell.font = { bold: true }; cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+            cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
+        });
+        headerTabel.height = 40;
+
+        let currentRow = startRow + 1;
+        dataLaporan.forEach((row, index) => {
+            const dataBaris = ws.getRow(currentRow);
+            dataBaris.values = [index + 1, row.pns, row.nip, row.jab, row.unit, row.pkj, row.nik, row.kerja, row.alamat, row.wapns, row.wapkj];
+            
+            ['A','B','C','D','E','F','G','H','I','J','K'].forEach((col) => {
+                const cell = ws.getCell(`${col}${currentRow}`);
+                cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} };
+                cell.alignment = { vertical: 'middle', wrapText: true };
+                if(['A','C','G','J','K'].includes(col)) { cell.alignment.horizontal = 'center'; }
+            });
+            currentRow++;
+        });
+
+        const buffer = await wb.xlsx.writeBuffer();
+        saveAs(new Blob([buffer]), `Laporan_GerduPraja_2026.xlsx`);
+    }
+</script>
+
+</body>
+</html>
