@@ -405,7 +405,7 @@ const dataPegawai = [
             return;
         }
 
-        statusEl.innerText = "⏳ Sedang sinkronisasi data dengan GitHub...";
+        statusEl.innerText = "⏳ Sedang sinkronisasi";
         statusEl.style.color = "#004085"; statusEl.style.backgroundColor = "#cce5ff";
 
         try {
@@ -428,10 +428,10 @@ const dataPegawai = [
             } else if (response.status === 404) {
                 dataLaporan = []; base64TtdLokal = null;
                 perbaruiUiTtd();
-                statusEl.innerText = "✅ Tersambung! Database awal siap digunakan.";
+                statusEl.innerText = "✅ Tersambung!";
                 statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
             } else {
-                throw new Error("Gagal load dari GitHub");
+                throw new Error("Gagal load");
             }
         } catch (error) {
             console.error(error);
@@ -442,7 +442,7 @@ const dataPegawai = [
                 base64TtdLokal = offlineData.ttd || null;
             }
             perbaruiUiTtd();
-            statusEl.innerHTML = "❌ <b>Koneksi GitHub Gagal</b>. Beralih ke Penyimpanan Lokal.";
+            statusEl.innerHTML = "❌ <b>Koneksi Gagal</b>. Beralih ke Penyimpanan Lokal.";
             statusEl.style.color = "#721c24"; statusEl.style.backgroundColor = "#f8d7da";
         }
         renderTabel();
