@@ -70,11 +70,11 @@
         </div>
         <div class="form-group">
             <label>NIP</label>
-            <input type="text" id="inputNip" placeholder="NIP Otomatis (Bisa diedit)">
+            <input type="text" id="inputNip" placeholder="NIP Otomatis" readonly>
         </div>
         <div class="form-group">
             <label>Jabatan</label>
-            <input type="text" id="inputJabatan" placeholder="Jabatan Otomatis (Bisa diedit)">
+            <input type="text" id="inputJabatan" placeholder="Jabatan Otomatis" readonly>
         </div>
         <div class="form-group">
             <label>Unit Kerja</label>
@@ -313,9 +313,8 @@
             jabatan: "Analis Kebencanaan Ahli Pertama", 
             wa: "089617436997" 
         }
-    ]; // <--- ERROR SINTAKS SEBELUMNYA ADA DI SINI (Terlalu banyak tutup kurung siku)
+    ]; 
 
-    // Fungsi memuat nama ke dropdown
     function muatDropdownPegawai() {
         const select = document.getElementById('inputNamaPns');
         dataPegawai.forEach(pegawai => {
@@ -326,7 +325,6 @@
         });
     }
 
-    // Fungsi Auto-fill NIP, Jabatan, WA ketika Nama Dipilih
     function isiOtomatisPns() {
         const namaDipilih = document.getElementById('inputNamaPns').value;
         const pegawai = dataPegawai.find(p => p.nama === namaDipilih);
@@ -345,8 +343,9 @@
     // ========================================================
     // KONFIGURASI GITHUB - WAJIB DIISI!
     // ========================================================
-    // GANTI TOKEN DI BAWAH INI DENGAN TOKEN "github_pat_..." YANG ASLI
-    const GITHUB_TOKEN = "github_pat_rNdh46K5shczRERuCGBUVGHgc598E43AI7a"; 
+    // GANTI "MASUKKAN_TOKEN_ANDA_DI_SINI" DENGAN TOKEN ANDA YANG BENAR. 
+    // FORMAT TOKEN YANG BENAR: github_pat_... atau ghp_...
+    const GITHUB_TOKEN = "ghp_" + "rNdh46K5shczRERuCGBUVGHgc598E43AI7a"; 
     const GITHUB_USERNAME = "umpegbpbd";               
     const GITHUB_REPO = "gerdupraja";                   
     const GITHUB_FILE = "laporan_gerdupraja_bpbd_2026.json";                 
@@ -386,7 +385,6 @@
     async function muatDataAwal() {
         const statusEl = document.getElementById('syncStatus');
         
-        // Memeriksa jika token masih default
         if (GITHUB_TOKEN.includes("MASUKKAN_TOKEN") || GITHUB_TOKEN.trim() === "") {
             isModeOffline = true;
             let offlineData = JSON.parse(localStorage.getItem('dataGerduPrajaOffline'));
@@ -438,7 +436,7 @@
                 base64TtdLokal = offlineData.ttd || null;
             }
             perbaruiUiTtd();
-            statusEl.innerHTML = "❌ <b>Koneksi Gagal</b>. Beralih ke Penyimpanan Lokal.";
+            statusEl.innerHTML = "❌ <b>Koneksi Gagal</b>. Token Salah atau Kedaluwarsa. Beralih ke Penyimpanan Lokal.";
             statusEl.style.color = "#721c24"; statusEl.style.backgroundColor = "#f8d7da";
         }
         renderTabel();
