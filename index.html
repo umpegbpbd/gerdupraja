@@ -173,152 +173,147 @@
 <script>
     // ========================================================
     // DATABASE PEGAWAI BPBD
-    // Salin dan tempel isi data dari "Master asn.pdf" Anda ke bawah sini
     // ========================================================
-const dataPegawai = [
-    { 
-        nama: "Drs. STEFANUS TRIADI ATMONO, M.Si.", 
-        nip: "197009071990031002", 
-        jabatan: "Kepala Pelaksana BPBD", 
-        wa: "08125914158" 
-    },
-    { 
-        nama: "Drs. AGUNG WIDODO", 
-        nip: "196906011994031006", 
-        jabatan: "Kabid. Pencegahan, Kesiapsiagaan, dan Kedaruratan", 
-        wa: "08123382948" 
-    },
-    { 
-        nama: "DWIANA HANDAYANI,SE", 
-        nip: "197807172011012005", 
-        jabatan: "Perencana Ahli Muda", 
-        wa: "081230115688" 
-    },
-    { 
-        nama: "EDY PURWANTO, SE", 
-        nip: "197208122008010017", 
-        jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
-        wa: "081334530950" 
-    },
-    { 
-        nama: "Bakti Dwi Prasetyo, S.T., M.T.", 
-        nip: "197805272006041020", 
-        jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
-        wa: "082153849554" 
-    },
-    { 
-        nama: "SUDARSONO", 
-        nip: "197112272007011007", 
-        jabatan: "Pengadministrasi Perkantoran", 
-        wa: "081259311855" 
-    },
-    { 
-        nama: "ANIKMATUL KHOIRIYAH, S.M.", 
-        nip: "198708152011012011", 
-        jabatan: "Penelaah Teknis Kebijakan", 
-        wa: "085648211672" 
-    },
-    { 
-        nama: "RENY YANTI, S.Pd", 
-        nip: "197812142008012017", 
-        jabatan: "Pengolah data dan informasi", 
-        wa: "082131595333" 
-    },
-    { 
-        nama: "RIZAL RIZKIANTO, A.Md", 
-        nip: "199510302020121005", 
-        jabatan: "Pengolah data dan informasi", 
-        wa: "083874768865" 
-    },
-    { 
-        nama: "SUJANTORO", 
-        nip: "197307042012121003", 
-        jabatan: "Pengadministrasi Perkantoran", 
-        wa: "085736344510" 
-    },
-    { 
-        nama: "WAWAN PURWANTO", 
-        nip: "198507102009011005", 
-        jabatan: "Operator Layanan Operasional", 
-        wa: "082189851985" 
-    },
-    { 
-        nama: "Abdurrohman Malik Ibrahim, S.Psi.", 
-        nip: "199604262020121004", 
-        jabatan: "Penata Layanan Operasional", 
-        wa: "085784418926" 
-    },
-    { 
-        nama: "Khoirul Anam A.Md", 
-        nip: "198202262011011011", 
-        jabatan: "Pengolah data dan informasi", 
-        wa: "085204912009" 
-    },
-    { 
-        nama: "PRABOWO", 
-        nip: "197412041997031003", 
-        jabatan: "Operator Layanan Operasional", 
-        wa: "085334203766" 
-    },
-    { 
-        nama: "TONI MURTONO, A.Md", 
-        nip: "198301022011011009", 
-        jabatan: "Pengolah data dan informasi", 
-        wa: "085335635356" 
-    },
-    { 
-        nama: "HARI MUSTAPA", 
-        nip: "197605202012121005", 
-        jabatan: "Operator Layanan Operasional", 
-        wa: "082335502636" 
-    },
-    { 
-        nama: "MUHAMAD CHOLIK", 
-        nip: "197904082011011005", 
-        jabatan: "Operator Layanan Operasional", 
-        wa: "085234907585" 
-    },
-    { 
-        nama: "Imam Basori, SE", 
-        nip: "196901221991031006", 
-        jabatan: "Penelaah Teknis Kebijakan", 
-        wa: "082302017733" 
-    },
-    { 
-        nama: "DEDY KURNIAWAN, S.T.", 
-        nip: "199409112022031003", 
-        jabatan: "Penelaah Teknis Kebijakan", 
-        wa: "085730041050" 
-    },
-    { 
-        nama: "TRI EFENDI", 
-        nip: "198009102007011003", 
-        jabatan: "Operator Layanan Operasional", 
-        wa: "0895425404080" 
-    },
-    { 
-        nama: "SUGENG HARYADI, S.T", 
-        nip: "196912212014061002", 
-        jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
-        wa: "081355132810" 
-    },
-    { 
-        nama: "DIAN LUPI YUSTIKASARI, A.Md.", 
-        nip: "199806182025062012", 
-        jabatan: "Pranata Komputer Terampil", 
-        wa: "081703554863" 
-    },
-    { 
-        nama: "ARDEA WIDIANTO ARI HIDAYAT, S.Psi.", 
-        nip: "200001102025061004", 
-        jabatan: "Analis Kebencanaan Ahli Pertama", 
-        wa: "089617436997" 
-    }
-];
-        // --- TAMBAHKAN DATA LAINNYA DI SINI ---
-        // Contoh format:
-        // { nama: "Nama Lengkap", nip: "12345678", jabatan: "Staf", wa: "08111" },
-    ];
+    const dataPegawai = [
+        { 
+            nama: "Drs. STEFANUS TRIADI ATMONO, M.Si.", 
+            nip: "197009071990031002", 
+            jabatan: "Kepala Pelaksana BPBD", 
+            wa: "08125914158" 
+        },
+        { 
+            nama: "Drs. AGUNG WIDODO", 
+            nip: "196906011994031006", 
+            jabatan: "Kabid. Pencegahan, Kesiapsiagaan, dan Kedaruratan", 
+            wa: "08123382948" 
+        },
+        { 
+            nama: "DWIANA HANDAYANI,SE", 
+            nip: "197807172011012005", 
+            jabatan: "Perencana Ahli Muda", 
+            wa: "081230115688" 
+        },
+        { 
+            nama: "EDY PURWANTO, SE", 
+            nip: "197208122008010017", 
+            jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
+            wa: "081334530950" 
+        },
+        { 
+            nama: "Bakti Dwi Prasetyo, S.T., M.T.", 
+            nip: "197805272006041020", 
+            jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
+            wa: "082153849554" 
+        },
+        { 
+            nama: "SUDARSONO", 
+            nip: "197112272007011007", 
+            jabatan: "Pengadministrasi Perkantoran", 
+            wa: "081259311855" 
+        },
+        { 
+            nama: "ANIKMATUL KHOIRIYAH, S.M.", 
+            nip: "198708152011012011", 
+            jabatan: "Penelaah Teknis Kebijakan", 
+            wa: "085648211672" 
+        },
+        { 
+            nama: "RENY YANTI, S.Pd", 
+            nip: "197812142008012017", 
+            jabatan: "Pengolah data dan informasi", 
+            wa: "082131595333" 
+        },
+        { 
+            nama: "RIZAL RIZKIANTO, A.Md", 
+            nip: "199510302020121005", 
+            jabatan: "Pengolah data dan informasi", 
+            wa: "083874768865" 
+        },
+        { 
+            nama: "SUJANTORO", 
+            nip: "197307042012121003", 
+            jabatan: "Pengadministrasi Perkantoran", 
+            wa: "085736344510" 
+        },
+        { 
+            nama: "WAWAN PURWANTO", 
+            nip: "198507102009011005", 
+            jabatan: "Operator Layanan Operasional", 
+            wa: "082189851985" 
+        },
+        { 
+            nama: "Abdurrohman Malik Ibrahim, S.Psi.", 
+            nip: "199604262020121004", 
+            jabatan: "Penata Layanan Operasional", 
+            wa: "085784418926" 
+        },
+        { 
+            nama: "Khoirul Anam A.Md", 
+            nip: "198202262011011011", 
+            jabatan: "Pengolah data dan informasi", 
+            wa: "085204912009" 
+        },
+        { 
+            nama: "PRABOWO", 
+            nip: "197412041997031003", 
+            jabatan: "Operator Layanan Operasional", 
+            wa: "085334203766" 
+        },
+        { 
+            nama: "TONI MURTONO, A.Md", 
+            nip: "198301022011011009", 
+            jabatan: "Pengolah data dan informasi", 
+            wa: "085335635356" 
+        },
+        { 
+            nama: "HARI MUSTAPA", 
+            nip: "197605202012121005", 
+            jabatan: "Operator Layanan Operasional", 
+            wa: "082335502636" 
+        },
+        { 
+            nama: "MUHAMAD CHOLIK", 
+            nip: "197904082011011005", 
+            jabatan: "Operator Layanan Operasional", 
+            wa: "085234907585" 
+        },
+        { 
+            nama: "Imam Basori, SE", 
+            nip: "196901221991031006", 
+            jabatan: "Penelaah Teknis Kebijakan", 
+            wa: "082302017733" 
+        },
+        { 
+            nama: "DEDY KURNIAWAN, S.T.", 
+            nip: "199409112022031003", 
+            jabatan: "Penelaah Teknis Kebijakan", 
+            wa: "085730041050" 
+        },
+        { 
+            nama: "TRI EFENDI", 
+            nip: "198009102007011003", 
+            jabatan: "Operator Layanan Operasional", 
+            wa: "0895425404080" 
+        },
+        { 
+            nama: "SUGENG HARYADI, S.T", 
+            nip: "196912212014061002", 
+            jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
+            wa: "081355132810" 
+        },
+        { 
+            nama: "DIAN LUPI YUSTIKASARI, A.Md.", 
+            nip: "199806182025062012", 
+            jabatan: "Pranata Komputer Terampil", 
+            wa: "081703554863" 
+        },
+        { 
+            nama: "ARDEA WIDIANTO ARI HIDAYAT, S.Psi.", 
+            nip: "200001102025061004", 
+            jabatan: "Analis Kebencanaan Ahli Pertama", 
+            wa: "089617436997" 
+        }
+    ]; // <--- ERROR SINTAKS SEBELUMNYA ADA DI SINI (Terlalu banyak tutup kurung siku)
 
     // Fungsi memuat nama ke dropdown
     function muatDropdownPegawai() {
@@ -341,7 +336,6 @@ const dataPegawai = [
             document.getElementById('inputJabatan').value = pegawai.jabatan || "";
             document.getElementById('inputWaPns').value = pegawai.wa || "";
         } else {
-            // Kosongkan form jika opsi "-- Pilih Nama Pegawai --" dipilih
             document.getElementById('inputNip').value = '';
             document.getElementById('inputJabatan').value = '';
             document.getElementById('inputWaPns').value = '';
@@ -351,7 +345,8 @@ const dataPegawai = [
     // ========================================================
     // KONFIGURASI GITHUB - WAJIB DIISI!
     // ========================================================
-    const GITHUB_TOKEN = "ghp_pat_rNdh46K5shczRERuCGBUVGHgc598E43AI7a"; 
+    // GANTI TOKEN DI BAWAH INI DENGAN TOKEN "github_pat_..." YANG ASLI
+    const GITHUB_TOKEN = "github_pat_rNdh46K5shczRERuCGBUVGHgc598E43AI7a"; 
     const GITHUB_USERNAME = "umpegbpbd";               
     const GITHUB_REPO = "gerdupraja";                   
     const GITHUB_FILE = "laporan_gerdupraja_bpbd_2026.json";                 
@@ -391,6 +386,7 @@ const dataPegawai = [
     async function muatDataAwal() {
         const statusEl = document.getElementById('syncStatus');
         
+        // Memeriksa jika token masih default
         if (GITHUB_TOKEN.includes("MASUKKAN_TOKEN") || GITHUB_TOKEN.trim() === "") {
             isModeOffline = true;
             let offlineData = JSON.parse(localStorage.getItem('dataGerduPrajaOffline'));
@@ -428,10 +424,10 @@ const dataPegawai = [
             } else if (response.status === 404) {
                 dataLaporan = []; base64TtdLokal = null;
                 perbaruiUiTtd();
-                statusEl.innerText = "✅ Tersambung!";
+                statusEl.innerText = "✅ Tersambung! Database baru siap digunakan.";
                 statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
             } else {
-                throw new Error("Gagal load");
+                throw new Error("Gagal load dari GitHub");
             }
         } catch (error) {
             console.error(error);
@@ -563,7 +559,6 @@ const dataPegawai = [
             wapns: wapns, wapkj: wapkj, kk: base64Kk
         });
 
-        // Kosongkan sebagian form, biarkan nama dropdown tetap agar user bisa menginput pekerja lain jika mau
         document.getElementById('inputNamaPekerja').value = '';
         document.getElementById('inputNikPekerja').value = '';
         document.getElementById('inputPekerjaan').value = '';
