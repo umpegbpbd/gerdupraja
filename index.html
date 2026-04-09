@@ -19,6 +19,10 @@
         label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; }
         input[type="text"], input[type="date"], select, input[type="file"] { width: 100%; padding: 9px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;}
         
+        /* Gaya khusus dropdown dan readonly */
+        select { background-color: #fff; cursor: pointer; }
+        input[readonly] { background-color: #e9ecef; cursor: not-allowed; color: #555; font-weight: bold; }
+        
         button { padding: 8px 15px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s; }
         button.primary { background-color: #007BFF; color: white; width: 100%; padding: 12px; font-size: 15px;}
         button.primary:hover { background-color: #0056b3; }
@@ -33,7 +37,7 @@
         
         .ttd-status { font-size: 13px; color: green; font-weight: bold; margin-bottom: 5px; display: none; }
 
-        .table-container { overflow-x: auto; display: none; /* Sembunyikan default */ }
+        .table-container { overflow-x: auto; display: none; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
         table, th, td { border: 1px solid #bbb; }
         th, td { padding: 8px; text-align: left; vertical-align: middle; }
@@ -60,23 +64,25 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nama PNS/CPNS</label>
-            <input type="text" id="inputNamaPns" placeholder="Masukkan Nama Lengkap & Gelar">
+            <select id="inputNamaPns" onchange="isiOtomatisPns()">
+                <option value="">-- Pilih Nama Pegawai --</option>
+            </select>
         </div>
         <div class="form-group">
             <label>NIP</label>
-            <input type="text" id="inputNip" placeholder="Masukkan 18 Digit NIP">
+            <input type="text" id="inputNip" placeholder="NIP Otomatis (Bisa diedit)">
         </div>
         <div class="form-group">
             <label>Jabatan</label>
-            <input type="text" id="inputJabatan" placeholder="Contoh: Analis Kebijakan">
+            <input type="text" id="inputJabatan" placeholder="Jabatan Otomatis (Bisa diedit)">
         </div>
         <div class="form-group">
             <label>Unit Kerja</label>
-            <input type="text" id="inputUnitKerja" value="BPBD Kabupaten Trenggalek">
+            <input type="text" id="inputUnitKerja" value="Badan Penanggulangan Bencana Daerah" readonly>
         </div>
         <div class="form-group">
             <label>No. WA PNS/CPNS</label>
-            <input type="text" id="inputWaPns" placeholder="081234567890">
+            <input type="text" id="inputWaPns" placeholder="No WA Otomatis (Bisa diedit)">
         </div>
     </div>
 
@@ -122,11 +128,11 @@
         <div class="filter-section">
             <div class="filter-item">
                 <label>Instansi Pelapor (Kop Surat):</label>
-                <input type="text" id="inputKopInstansi" value="Dinas/Badan/Kecamatan/RS/Puskesmas/Sekolah">
+                <input type="text" id="inputKopInstansi" value="Badan Penanggulangan Bencana Daerah">
             </div>
             <div class="filter-item">
                 <label>Nama Pimpinan (Penandatangan):</label>
-                <input type="text" id="inputNamaPimpinan" placeholder="Nama Kepala Dinas / Pimpinan">
+                <input type="text" id="inputNamaPimpinan" placeholder="Nama Kepala Pelaksana BPBD">
             </div>
             <div class="filter-item">
                 <label>Pengaturan Tanda Tangan Pimpinan:</label>
@@ -166,19 +172,195 @@
 
 <script>
     // ========================================================
+    // DATABASE PEGAWAI BPBD
+    // Salin dan tempel isi data dari "Master asn.pdf" Anda ke bawah sini
+    // ========================================================
+const dataPegawai = [
+    { 
+        nama: "Drs. STEFANUS TRIADI ATMONO, M.Si.", 
+        nip: "197009071990031002", 
+        jabatan: "Kepala Pelaksana BPBD", 
+        wa: "08125914158" 
+    },
+    { 
+        nama: "Drs. AGUNG WIDODO", 
+        nip: "196906011994031006", 
+        jabatan: "Kabid. Pencegahan, Kesiapsiagaan, dan Kedaruratan", 
+        wa: "08123382948" 
+    },
+    { 
+        nama: "DWIANA HANDAYANI,SE", 
+        nip: "197807172011012005", 
+        jabatan: "Perencana Ahli Muda", 
+        wa: "081230115688" 
+    },
+    { 
+        nama: "EDY PURWANTO, SE", 
+        nip: "197208122008010017", 
+        jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
+        wa: "081334530950" 
+    },
+    { 
+        nama: "Bakti Dwi Prasetyo, S.T., M.T.", 
+        nip: "197805272006041020", 
+        jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
+        wa: "082153849554" 
+    },
+    { 
+        nama: "SUDARSONO", 
+        nip: "197112272007011007", 
+        jabatan: "Pengadministrasi Perkantoran", 
+        wa: "081259311855" 
+    },
+    { 
+        nama: "ANIKMATUL KHOIRIYAH, S.M.", 
+        nip: "198708152011012011", 
+        jabatan: "Penelaah Teknis Kebijakan", 
+        wa: "085648211672" 
+    },
+    { 
+        nama: "RENY YANTI, S.Pd", 
+        nip: "197812142008012017", 
+        jabatan: "Pengolah data dan informasi", 
+        wa: "082131595333" 
+    },
+    { 
+        nama: "RIZAL RIZKIANTO, A.Md", 
+        nip: "199510302020121005", 
+        jabatan: "Pengolah data dan informasi", 
+        wa: "083874768865" 
+    },
+    { 
+        nama: "SUJANTORO", 
+        nip: "197307042012121003", 
+        jabatan: "Pengadministrasi Perkantoran", 
+        wa: "085736344510" 
+    },
+    { 
+        nama: "WAWAN PURWANTO", 
+        nip: "198507102009011005", 
+        jabatan: "Operator Layanan Operasional", 
+        wa: "082189851985" 
+    },
+    { 
+        nama: "Abdurrohman Malik Ibrahim, S.Psi.", 
+        nip: "199604262020121004", 
+        jabatan: "Penata Layanan Operasional", 
+        wa: "085784418926" 
+    },
+    { 
+        nama: "Khoirul Anam A.Md", 
+        nip: "198202262011011011", 
+        jabatan: "Pengolah data dan informasi", 
+        wa: "085204912009" 
+    },
+    { 
+        nama: "PRABOWO", 
+        nip: "197412041997031003", 
+        jabatan: "Operator Layanan Operasional", 
+        wa: "085334203766" 
+    },
+    { 
+        nama: "TONI MURTONO, A.Md", 
+        nip: "198301022011011009", 
+        jabatan: "Pengolah data dan informasi", 
+        wa: "085335635356" 
+    },
+    { 
+        nama: "HARI MUSTAPA", 
+        nip: "197605202012121005", 
+        jabatan: "Operator Layanan Operasional", 
+        wa: "082335502636" 
+    },
+    { 
+        nama: "MUHAMAD CHOLIK", 
+        nip: "197904082011011005", 
+        jabatan: "Operator Layanan Operasional", 
+        wa: "085234907585" 
+    },
+    { 
+        nama: "Imam Basori, SE", 
+        nip: "196901221991031006", 
+        jabatan: "Penelaah Teknis Kebijakan", 
+        wa: "082302017733" 
+    },
+    { 
+        nama: "DEDY KURNIAWAN, S.T.", 
+        nip: "199409112022031003", 
+        jabatan: "Penelaah Teknis Kebijakan", 
+        wa: "085730041050" 
+    },
+    { 
+        nama: "TRI EFENDI", 
+        nip: "198009102007011003", 
+        jabatan: "Operator Layanan Operasional", 
+        wa: "0895425404080" 
+    },
+    { 
+        nama: "SUGENG HARYADI, S.T", 
+        nip: "196912212014061002", 
+        jabatan: "Penata Penanggulangan Bencana Ahli Muda", 
+        wa: "081355132810" 
+    },
+    { 
+        nama: "DIAN LUPI YUSTIKASARI, A.Md.", 
+        nip: "199806182025062012", 
+        jabatan: "Pranata Komputer Terampil", 
+        wa: "081703554863" 
+    },
+    { 
+        nama: "ARDEA WIDIANTO ARI HIDAYAT, S.Psi.", 
+        nip: "200001102025061004", 
+        jabatan: "Analis Kebencanaan Ahli Pertama", 
+        wa: "089617436997" 
+    }
+];
+        // --- TAMBAHKAN DATA LAINNYA DI SINI ---
+        // Contoh format:
+        // { nama: "Nama Lengkap", nip: "12345678", jabatan: "Staf", wa: "08111" },
+    ];
+
+    // Fungsi memuat nama ke dropdown
+    function muatDropdownPegawai() {
+        const select = document.getElementById('inputNamaPns');
+        dataPegawai.forEach(pegawai => {
+            const option = document.createElement('option');
+            option.value = pegawai.nama;
+            option.text = pegawai.nama;
+            select.appendChild(option);
+        });
+    }
+
+    // Fungsi Auto-fill NIP, Jabatan, WA ketika Nama Dipilih
+    function isiOtomatisPns() {
+        const namaDipilih = document.getElementById('inputNamaPns').value;
+        const pegawai = dataPegawai.find(p => p.nama === namaDipilih);
+        
+        if (pegawai) {
+            document.getElementById('inputNip').value = pegawai.nip || "";
+            document.getElementById('inputJabatan').value = pegawai.jabatan || "";
+            document.getElementById('inputWaPns').value = pegawai.wa || "";
+        } else {
+            // Kosongkan form jika opsi "-- Pilih Nama Pegawai --" dipilih
+            document.getElementById('inputNip').value = '';
+            document.getElementById('inputJabatan').value = '';
+            document.getElementById('inputWaPns').value = '';
+        }
+    }
+
+    // ========================================================
     // KONFIGURASI GITHUB - WAJIB DIISI!
     // ========================================================
     const GITHUB_TOKEN = "ghp_" + "xJaWCzTZ9UoU9thNTZGWnukpErWKME0XiQ87"; 
     const GITHUB_USERNAME = "umpegbpbd";               
     const GITHUB_REPO = "gerdupraja";                   
-    const GITHUB_FILE = "laporan_gerdupraja_2026.json";                 
+    const GITHUB_FILE = "laporan_gerdupraja_bpbd_2026.json";                 
 
     let dataLaporan = []; 
     let fileSha = ""; 
     let isModeOffline = false; 
     let base64TtdLokal = null; 
     
-    // Toggle visibilitas tabel laporan
     function toggleLaporan() {
         const divLaporan = document.getElementById('areaLaporan');
         const btn = document.getElementById('btnToggleLaporan');
@@ -193,7 +375,6 @@
         }
     }
 
-    // FUNGSI UPDATE UI TANDA TANGAN
     function perbaruiUiTtd() {
         if(base64TtdLokal) {
             document.getElementById('ttdStatus').style.display = 'block';
@@ -207,9 +388,6 @@
         }
     }
 
-    // ========================================================
-    // KONEKSI API KE GITHUB (MEMBACA & MENYIMPAN)
-    // ========================================================
     async function muatDataAwal() {
         const statusEl = document.getElementById('syncStatus');
         
@@ -315,6 +493,7 @@
     }
 
     window.onload = function() {
+        muatDropdownPegawai(); 
         muatDataAwal(); 
     };
 
@@ -361,6 +540,7 @@
         const nip = document.getElementById('inputNip').value;
         const jab = document.getElementById('inputJabatan').value;
         const unit = document.getElementById('inputUnitKerja').value;
+        
         const pkj = document.getElementById('inputNamaPekerja').value;
         const nik = document.getElementById('inputNikPekerja').value;
         const kerja = document.getElementById('inputPekerjaan').value;
@@ -383,15 +563,11 @@
             wapns: wapns, wapkj: wapkj, kk: base64Kk
         });
 
-        // Reset sebagian form (kecuali unit kerja agar gampang input banyak)
-        document.getElementById('inputNamaPns').value = '';
-        document.getElementById('inputNip').value = '';
-        document.getElementById('inputJabatan').value = '';
+        // Kosongkan sebagian form, biarkan nama dropdown tetap agar user bisa menginput pekerja lain jika mau
         document.getElementById('inputNamaPekerja').value = '';
         document.getElementById('inputNikPekerja').value = '';
         document.getElementById('inputPekerjaan').value = '';
         document.getElementById('inputAlamat').value = '';
-        document.getElementById('inputWaPns').value = '';
         document.getElementById('inputWaPekerja').value = '';
         document.getElementById('inputKk').value = '';
 
@@ -438,17 +614,13 @@
         });
     }
 
-    // ========================================================
-    // CETAK PDF & EXCEL 
-    // ========================================================
     function cetakPDF() {
         if(dataLaporan.length === 0) { alert("Tidak ada data untuk dicetak!"); return; }
 
         const { jsPDF } = window.jspdf;
-        // Mode Landscape karena banyak kolom
         const doc = new jsPDF('l', 'mm', 'a4'); 
         const pageWidth = doc.internal.pageSize.getWidth();
-        const instansi = document.getElementById('inputKopInstansi').value || "Dinas/Badan/Kecamatan/RS/Puskesmas/Sekolah";
+        const instansi = document.getElementById('inputKopInstansi').value || "Badan Penanggulangan Bencana Daerah";
 
         doc.setFontSize(12); doc.setFont("helvetica", "bold");
         doc.text("FORMAT LAPORAN PELAKSANAAN GERAKAN PEDULI PERLINDUNGAN PEKERJA RENTAN (GERDU PRAJA) TAHUN 2026", pageWidth / 2, 15, { align: 'center' });
@@ -477,12 +649,10 @@
             }
         });
 
-        // Tanda Tangan Footer
         let finalY = doc.lastAutoTable.finalY + 15;
         if (finalY > 180) { doc.addPage(); finalY = 30; }
         const rightMargin = pageWidth - 60; 
         
-        // Memakai lokasi default Trenggalek
         doc.setFont("helvetica", "normal");
         const today = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: '2-digit' });
         doc.text(`Trenggalek, ${today}`, rightMargin, finalY);
@@ -494,7 +664,7 @@
         doc.setFont("helvetica", "bold"); 
         doc.text(namaPimpinan, rightMargin, finalY + 30);
 
-        doc.save(`Laporan_GerduPraja_2026.pdf`);
+        doc.save(`Laporan_GerduPraja_BPBD_2026.pdf`);
     }
 
     async function cetakExcel() {
@@ -512,7 +682,7 @@
         ws.getCell('A1').value = "FORMAT LAPORAN PELAKSANAAN GERAKAN PEDULI PERLINDUNGAN PEKERJA RENTAN (GERDU PRAJA) TAHUN 2026";
         ws.getCell('A1').font = { bold: true, size: 12 }; ws.getCell('A1').alignment = { horizontal: 'center' };
         
-        const instansi = document.getElementById('inputKopInstansi').value || "Dinas/Badan/Kecamatan/RS/Puskesmas/Sekolah";
+        const instansi = document.getElementById('inputKopInstansi').value || "Badan Penanggulangan Bencana Daerah";
         ws.mergeCells('A2:K2');
         ws.getCell('A2').value = instansi.toUpperCase();
         ws.getCell('A2').font = { bold: true, size: 11 }; ws.getCell('A2').alignment = { horizontal: 'center' };
@@ -543,7 +713,7 @@
         });
 
         const buffer = await wb.xlsx.writeBuffer();
-        saveAs(new Blob([buffer]), `Laporan_GerduPraja_2026.xlsx`);
+        saveAs(new Blob([buffer]), `Laporan_GerduPraja_BPBD_2026.xlsx`);
     }
 </script>
 
