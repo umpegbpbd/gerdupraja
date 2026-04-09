@@ -6,7 +6,7 @@
     <title>Form Laporan Gerdu Praja</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; color: #333; }
-        .container { max-width: 1300px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; margin-bottom: 5px; color: #2c3e50; }
         h4 { text-align: center; margin-top: 0; margin-bottom: 25px; color: #7f8c8d; font-weight: normal; }
         .sync-status { text-align: center; font-size: 13px; font-weight: bold; margin-bottom: 20px; padding: 8px; border-radius: 4px; background: #eee; }
@@ -154,7 +154,7 @@
                     <th style="width: 12%;">Nama PNS/CPNS</th>
                     <th style="width: 12%;">NIP</th>
                     <th style="width: 10%;">Jabatan</th>
-                    <th style="width: 16%;">Unit Kerja</th>
+                    <th style="width: 18%;">Unit Kerja</th>
                     <th style="width: 10%;">Nama Pekerja</th>
                     <th style="width: 10%;">NIK Pekerja</th>
                     <th style="width: 8%;">Pekerjaan</th>
@@ -320,7 +320,7 @@
                 base64TtdLokal = parsedData.ttd || null;
 
                 perbaruiUiTtd();
-                statusEl.innerText = "✅ Tersambung";
+                statusEl.innerText = "✅ Tersambung & Data Sinkron";
                 statusEl.style.color = "#155724"; statusEl.style.backgroundColor = "#d4edda";
             } else if (response.status === 404) {
                 dataLaporan = []; base64TtdLokal = null;
@@ -537,20 +537,20 @@
             head: [['No', 'Nama PNS/CPNS', 'NIP', 'Jabatan', 'Unit Kerja', 'Nama Pekerja Rentan\nyang Didaftarkan', 'NIK yang\nDidaftarkan', 'Pekerjaan yang\nDidaftarkan', 'Alamat yang\nDidaftarkan', 'No. WA\nPNS/CPNS', 'No. WA yang\nDidaftarkan']],
             body: tableBody, 
             theme: 'grid', 
-            styles: { fontSize: 8, valign: 'middle', textColor: [0, 0, 0], lineColor: [0, 0, 0], lineWidth: 0.2 },
+            styles: { fontSize: 8, valign: 'middle', textColor: [0, 0, 0], lineColor: [0, 0, 0], lineWidth: 0.2, minCellHeight: 10 },
             headStyles: { fillColor: [220, 224, 228], textColor: [0, 0, 0], halign: 'center', fontStyle: 'bold' },
             columnStyles: {
                 0: { cellWidth: 7, halign: 'center' },
                 1: { cellWidth: 26 }, 
                 2: { cellWidth: 32 }, 
-                3: { cellWidth: 25 }, 
+                3: { cellWidth: 20 }, 
                 4: { cellWidth: 35 }, 
-                5: { cellWidth: 30 }, 
+                5: { cellWidth: 28 }, 
                 6: { cellWidth: 28 }, 
                 7: { cellWidth: 20 },
                 8: { cellWidth: 35 }, 
-                9: { cellWidth: 25 }, 
-                10: { cellWidth: 25 } 
+                9: { cellWidth: 22 }, 
+                10: { cellWidth: 22 } 
             }
         });
 
