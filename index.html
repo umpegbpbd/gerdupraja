@@ -379,7 +379,7 @@
             if (response.ok) {
                 const result = await response.json();
                 fileSha = result.content.sha;
-                statusEl.innerText = "✅ Data Berhasil Disimpan ke Cloud";
+                statusEl.innerText = "✅ Data Berhasil Disimpan";
             } else {
                 throw new Error("Upload gagal");
             }
